@@ -17,4 +17,14 @@ class HomeRepoImpl extends HomeRepo {
       return Left(e);
     }
   }
+
+  @override
+  Future<Either<dynamic, List<CityModel>>> getCities() async {
+    try {
+      final response = await _homeDataSource.getCities();
+      return Right(response!);
+    } catch (e) {
+      return Left(e);
+    }
+  }
 }

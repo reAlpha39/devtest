@@ -14,8 +14,23 @@ class UserCubit extends Cubit<UserState> {
   final GetUsersUsecase _getUsersUsecase;
 
   List<UserModel>? _users;
+  List<UserModel>? _filteredUsers;
 
-  get users => _users;
+  String _filterCity = '';
+  String _query = '';
+
+  List<UserModel>? get users => _users;
+  String get filterCity => _filterCity;
+
+  filter(String value) {
+    _filterCity = value;
+    searchUsers();
+  }
+
+  query(String value) {
+    _query = value;
+    searchUsers();
+  }
 
   Future<void> getUsers() async {
     emit(const UserState.loading());
@@ -29,19 +44,29 @@ class UserCubit extends Cubit<UserState> {
     );
   }
 
-  void searchUsers(String query) {
+  void searchUsers() {
     if (_users == null) {
       return;
     }
+
     emit(const UserState.loading());
-    if (query.isEmpty) {
-      emit(UserState.loaded(_users!));
-    } else {
-      final filteredUsers = _users!
-          .where(
-              (user) => user.name!.toLowerCase().contains(query.toLowerCase()))
-          .toList();
-      emit(UserState.loaded(filteredUsers));
-    }
+
+    _filteredUsers ??= _users;
+
+    final filteredUsers = _users!
+        .where(
+          (user) =>
+              (_query.isEmpty
+                  ? true
+                  : user.name!.toLowerCase().contains(_query.toLowerCase())) &&
+              (_filterCity.isEmpty
+                  ? true
+                  : user.city!
+                      .toLowerCase()
+                      .contains(_filterCity.toLowerCase())),
+        )
+        .toList();
+    _filteredUsers = filteredUsers;
+    emit(UserState.loaded(filteredUsers));
   }
 }

@@ -19,7 +19,21 @@ class HomeDataSourceImpl extends HomeDataSource {
       if (response == null) return null;
 
       return (response as List).map((e) => UserModel.fromJson(e)).toList();
+    } catch (e, stacktrace) {
+      await ErrorHelper.handleError(e, stack: stacktrace);
+    }
 
+    return null;
+  }
+
+  @override
+  Future<List<CityModel>?> getCities() async {
+    try {
+      final response = await _helper.get(url: dotenv.env['CITY'] ?? '');
+
+      if (response == null) return null;
+
+      return (response as List).map((e) => CityModel.fromJson(e)).toList();
     } catch (e, stacktrace) {
       await ErrorHelper.handleError(e, stack: stacktrace);
     }

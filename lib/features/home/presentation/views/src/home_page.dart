@@ -1,3 +1,4 @@
+import 'package:app_bar_with_search_switch/app_bar_with_search_switch.dart';
 import 'package:devtest/features/features.dart';
 import 'package:devtest/injection.dart';
 import 'package:flutter/material.dart';
@@ -10,15 +11,50 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => getIt<UserCubit>()..getUsers(),
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Daftar User'),
-        ),
-        body: const _HomePageBody(),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {},
-          child: const Icon(Icons.add),
-        )
+      child: Builder(
+        builder: (context) {
+          return Scaffold(
+            appBar: AppBarWithSearchSwitch(
+              onChanged: (text) => context.read<UserCubit>().searchUsers(text),
+              title: (context) {
+                final mainWidget = AppBarWithSearchSwitch.of(context)!;
+                return Directionality(
+                  textDirection: Directionality.of(context),
+                  child: TextField(
+                    keyboardType: mainWidget.keyboardType,
+                    decoration: const InputDecoration(
+                      hintText: 'Cari user...',
+                      enabledBorder: InputBorder.none,
+                      focusedBorder: InputBorder.none,
+                      border: InputBorder.none,
+                    ),
+                    onSubmitted: AppBarWithSearchSwitch.of(context)
+                        ?.submitCallbackForTextField,
+                    autofocus: true,
+                    controller: mainWidget.textEditingController,
+                  ),
+                );
+              },
+              appBarBuilder: (context) => AppBar(
+                title: const Text('Daftar User'),
+                actions: [
+                  const AppBarSearchButton(),
+                  IconButton(
+                    onPressed: () {},
+                    icon: const Icon(
+                      Icons.more_vert_rounded,
+                    ),
+                  )
+                ],
+              ),
+            ),
+            body: const _HomePageBody(),
+            floatingActionButton: FloatingActionButton(
+              onPressed: () {},
+              child: const Icon(Icons.add),
+            ),
+          );
+        }
       ),
     );
   }
@@ -29,22 +65,19 @@ class _HomePageBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cubit = context.read<UserCubit>();
     return BlocBuilder<UserCubit, UserState>(
       builder: (context, state) => state.maybeWhen(
         orElse: () => const SizedBox(),
         loading: () => const Center(
           child: CircularProgressIndicator.adaptive(),
         ),
-        loaded: (_) => ListView.builder(
-          itemCount: cubit.users.length,
+        loaded: (user) => ListView.builder(
+          itemCount: user.length,
           itemBuilder: (context, index) => UserCard(
-            user: cubit.users[index],
+            user: user[index],
           ),
         ),
       ),
     );
   }
 }
-
-

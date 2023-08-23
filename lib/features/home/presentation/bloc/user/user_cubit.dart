@@ -28,4 +28,20 @@ class UserCubit extends Cubit<UserState> {
       },
     );
   }
+
+  void searchUsers(String query) {
+    if (_users == null) {
+      return;
+    }
+    emit(const UserState.loading());
+    if (query.isEmpty) {
+      emit(UserState.loaded(_users!));
+    } else {
+      final filteredUsers = _users!
+          .where(
+              (user) => user.name!.toLowerCase().contains(query.toLowerCase()))
+          .toList();
+      emit(UserState.loaded(filteredUsers));
+    }
+  }
 }

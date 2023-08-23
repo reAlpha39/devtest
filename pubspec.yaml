@@ -9,6 +9,7 @@ environment:
   sdk: '>=3.1.0 <4.0.0'
 
 dependencies:
+  app_bar_with_search_switch: ^1.5.4
   cupertino_icons: ^1.0.2
   flutter:
     sdk: flutter

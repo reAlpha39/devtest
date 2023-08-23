@@ -1,5 +1,5 @@
 import 'package:devtest/core/core.dart';
-import 'package:devtest/main.dart';
+import 'package:devtest/features/features.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';

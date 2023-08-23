@@ -1,9 +1,18 @@
+import 'package:devtest/core/core.dart';
 import 'package:devtest/injection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   configureDependencies();
+
+  // load .env file
+  await dotenv.load();
+
+  // initialize BuildConfig
+  BuildConfig.init();
+
   runApp(const MyApp());
 }
 

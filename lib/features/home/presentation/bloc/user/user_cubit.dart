@@ -18,18 +18,25 @@ class UserCubit extends Cubit<UserState> {
 
   String _filterCity = '';
   String _query = '';
+  UserSortBy _sortBy = UserSortBy.nameAZ;
 
   List<UserModel>? get users => _users;
   String get filterCity => _filterCity;
+  UserSortBy get sortBy => _sortBy;
 
   filter(String value) {
     _filterCity = value;
-    searchUsers();
+    _searchUsers();
   }
 
   query(String value) {
     _query = value;
-    searchUsers();
+    _searchUsers();
+  }
+
+  sort(UserSortBy value) {
+    _sortBy = value;
+    _searchUsers();
   }
 
   Future<void> getUsers() async {
@@ -39,12 +46,13 @@ class UserCubit extends Cubit<UserState> {
       (l) => emit(UserState.error(l.toString())),
       (r) {
         _users = r;
-        emit(UserState.loaded(r));
+        _sortByName();
+        emit(UserState.loaded(_filteredUsers!));
       },
     );
   }
 
-  void searchUsers() {
+  void _searchUsers() {
     if (_users == null) {
       return;
     }
@@ -53,20 +61,59 @@ class UserCubit extends Cubit<UserState> {
 
     _filteredUsers ??= _users;
 
-    final filteredUsers = _users!
+    final filteredUsers = _filteredUsers!
         .where(
           (user) =>
               (_query.isEmpty
                   ? true
-                  : user.name!.toLowerCase().contains(_query.toLowerCase())) &&
+                  : (user.name ?? '')
+                      .toLowerCase()
+                      .contains(_query.toLowerCase())) &&
               (_filterCity.isEmpty
                   ? true
-                  : user.city!
+                  : (user.city ?? '')
                       .toLowerCase()
                       .contains(_filterCity.toLowerCase())),
         )
         .toList();
     _filteredUsers = filteredUsers;
+
+    // sort after filtered
+    _sortByName();
+
     emit(UserState.loaded(filteredUsers));
   }
+
+  void _sortByName() {
+    if (_users == null) {
+      return;
+    }
+
+    _filteredUsers ??= _users;
+
+    List<UserModel>? sortedUsers;
+
+    if (_sortBy == UserSortBy.nameAZ) {
+      sortedUsers = _filteredUsers!
+        ..sort(
+          (a, b) => (a.name ?? '')
+              .toLowerCase()
+              .compareTo((b.name ?? '').toLowerCase()),
+        );
+    } else {
+      sortedUsers = _filteredUsers!
+        ..sort(
+          (a, b) => (b.name ?? '')
+              .toLowerCase()
+              .compareTo((a.name ?? '').toLowerCase()),
+        );
+    }
+
+    _filteredUsers = sortedUsers;
+  }
+}
+
+enum UserSortBy {
+  nameAZ,
+  nameZA,
 }

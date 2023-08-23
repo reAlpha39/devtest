@@ -94,9 +94,21 @@ class _HomePageBody extends StatelessWidget {
               ),
               const SizedBox(width: 8),
               PillButton(
-                text: 'Urutkan',
+                text: userCubit.sortBy == UserSortBy.nameAZ
+                    ? 'Nama (A-Z)'
+                    : 'Nama (Z-A)',
+                isActive: true,
                 prefixIcon: Icons.sort,
-                onPressed: () {},
+                onPressed: () async {
+                  final result = await SortBottomSheet.open(
+                    context,
+                    sortBy: userCubit.sortBy,
+                  );
+
+                  if (result != null) {
+                    userCubit.sort(result as UserSortBy);
+                  }
+                },
               ),
             ],
           ),

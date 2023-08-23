@@ -25,7 +25,12 @@ class UserCubit extends Cubit<UserState> {
   UserSortBy get sortBy => _sortBy;
 
   filter(String value) {
-    _filterCity = value;
+    if (value == 'All') {
+      _filterCity = '';
+    } else {
+      _filterCity = value;
+    }
+
     _searchUsers();
   }
 
@@ -59,9 +64,7 @@ class UserCubit extends Cubit<UserState> {
 
     emit(const UserState.loading());
 
-    _filteredUsers ??= _users;
-
-    final filteredUsers = _filteredUsers!
+    final filteredUsers = _users!
         .where(
           (user) =>
               (_query.isEmpty

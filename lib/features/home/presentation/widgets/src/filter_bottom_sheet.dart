@@ -20,49 +20,76 @@ class _FilterBottomSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => getIt<CitiesCubit>()..getCities(),
-      child: Column(
+      child: Stack(
         children: [
-          const SizedBox(height: 16),
-          Text(
-            'Pilih Kota',
-            style: TextStyle(
-              fontSize: 18,
-              color: Theme.of(context).colorScheme.onSurface,
-            ),
-          ),
-          const SizedBox(height: 16),
-          BlocBuilder<CitiesCubit, CitiesState>(
-            builder: (context, state) => state.maybeWhen(
-              orElse: () => const SizedBox.shrink(),
-              loading: () => const Center(
-                child: CircularProgressIndicator(),
+          Column(
+            children: [
+              const SizedBox(height: 16),
+              Text(
+                'Pilih Kota',
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
               ),
-              loaded: (cities) => Expanded(
-                child: ListView.builder(
-                  itemCount: cities.length,
-                  itemBuilder: (context, index) {
-                    final city = cities[index];
-                    return ListTile(
-                      title: Text(city.name ?? '-'),
-                      selected: city.name == filter,
-                      trailing: city.name == filter
-                          ? const Icon(Icons.check)
-                          : null,
-                      onTap: () {
-                        Navigator.pop(
-                          context,
-                          {
-                            'id': city.id,
-                            'name': city.name,
+              const SizedBox(height: 16),
+              BlocBuilder<CitiesCubit, CitiesState>(
+                builder: (context, state) => state.maybeWhen(
+                  orElse: () => const SizedBox.shrink(),
+                  loading: () => const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                  loaded: (cities) => Expanded(
+                    child: ListView.builder(
+                      itemCount: cities.length,
+                      itemBuilder: (context, index) {
+                        final city = cities[index];
+                        return ListTile(
+                          title: Text(city.name ?? '-'),
+                          selected: city.name == filter,
+                          trailing: city.name == filter
+                              ? const Icon(Icons.check)
+                              : null,
+                          onTap: () {
+                            Navigator.pop(
+                              context,
+                              {
+                                'id': city.id,
+                                'name': city.name,
+                              },
+                            );
                           },
                         );
                       },
-                    );
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          if ((filter ?? '').isNotEmpty) ...[
+            Positioned(
+              right: 16,
+              top: 8,
+              child: OutlinedButton(
+                onPressed: () => Navigator.pop(
+                  context,
+                  {
+                    'id': 0,
+                    'name': 'All',
                   },
+                ),
+                child: Text(
+                  'Reset',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
               ),
             ),
-          ),
+          ],
         ],
       ),
     );

@@ -154,23 +154,21 @@ class _AddUserPageBody extends StatelessWidget {
                 ),
               ),
             ),
-            SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.only(top: 16),
-                child: FilledButton(
-                  onPressed: () => addUserCubit.createUser(),
-                  style: ButtonStyle(
-                    shape: MaterialStateProperty.all(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
+            Padding(
+              padding: const EdgeInsets.only(top: 16, bottom: 32),
+              child: FilledButton(
+                onPressed: () => addUserCubit.createUser(),
+                style: ButtonStyle(
+                  shape: MaterialStateProperty.all(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
                     ),
                   ),
-                  child: const Padding(
-                    padding: EdgeInsets.all(12.0),
-                    child: Center(
-                      child: Text('Simpan'),
-                    ),
+                ),
+                child: const Padding(
+                  padding: EdgeInsets.all(12.0),
+                  child: Center(
+                    child: Text('Simpan'),
                   ),
                 ),
               ),

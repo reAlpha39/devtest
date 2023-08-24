@@ -15,11 +15,6 @@ class AddUserPage extends StatelessWidget {
       child: Builder(
         builder: (context) => BlocListener<CreateUserCubit, CreateUserState>(
           listener: (context, state) => state.maybeWhen(
-            error: (e) {
-              LoadingOverlay.hide();
-              ErrorHelper.handleError(e);
-              return;
-            },
             loading: () => LoadingOverlay.show(),
             success: () {
               LoadingOverlay.hide();
@@ -30,7 +25,7 @@ class AddUserPage extends StatelessWidget {
               );
               return Navigator.of(context).pop(true);
             },
-            orElse: () => null,
+            orElse: () => LoadingOverlay.hide(),
           ),
           child: KeyboardDismissOnTap(
             child: Scaffold(

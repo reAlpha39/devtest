@@ -14,6 +14,12 @@ final routerApp = GoRouter(
     GoRoute(
       path: RoutesPath.home,
       builder: (context, state) => const HomePage(),
+      routes: [
+        GoRoute(
+          path: RoutesPath.removeSlash(RoutesPath.addUser),
+          builder: (context, state) => const AddUserPage(),
+        ),
+      ],
     ),
   ],
 );

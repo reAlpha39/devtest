@@ -1,8 +1,10 @@
 import 'package:app_bar_with_search_switch/app_bar_with_search_switch.dart';
+import 'package:devtest/core/core.dart';
 import 'package:devtest/features/features.dart';
 import 'package:devtest/injection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -12,6 +14,7 @@ class HomePage extends StatelessWidget {
     return BlocProvider(
       create: (context) => getIt<UserCubit>()..getUsers(),
       child: Builder(builder: (context) {
+        final userCubit = context.read<UserCubit>();
         return Scaffold(
           appBar: AppBarWithSearchSwitch(
             onChanged: (text) => context.read<UserCubit>().query(text),
@@ -37,20 +40,19 @@ class HomePage extends StatelessWidget {
             appBarBuilder: (context) => AppBar(
               title: const Text('Daftar User'),
               scrolledUnderElevation: 0,
-              actions: [
-                const AppBarSearchButton(),
-                IconButton(
-                  onPressed: () {},
-                  icon: const Icon(
-                    Icons.more_vert_rounded,
-                  ),
-                )
+              actions: const [
+                AppBarSearchButton(),
               ],
             ),
           ),
           body: const _HomePageBody(),
           floatingActionButton: FloatingActionButton(
-            onPressed: () {},
+            onPressed: () async {
+              final result = await context.push(RoutesPath.addUser);
+              if (result == true) {
+                userCubit.getUsers();
+              }
+            },
             child: const Icon(Icons.add),
           ),
         );

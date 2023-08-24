@@ -40,4 +40,22 @@ class HomeDataSourceImpl extends HomeDataSource {
 
     return null;
   }
+
+  @override
+  Future<bool?> createUser(UserModel user) async {
+    try {
+      final response = await _helper.post(
+        url: dotenv.env['USER'] ?? '',
+        data: user.toJson(),
+      );
+
+      if (response == null) return null;
+
+      return true;
+    } catch (e, stacktrace) {
+      ErrorHelper.handleError(e, stack: stacktrace);
+    }
+
+    return null;
+  }
 }

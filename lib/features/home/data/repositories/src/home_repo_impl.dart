@@ -27,4 +27,14 @@ class HomeRepoImpl extends HomeRepo {
       return Left(e);
     }
   }
+  
+  @override
+  Future<Either<dynamic, bool>> createUser(UserModel user) async {
+    try {
+      final response = await _homeDataSource.createUser(user);
+      return Right(response!);
+    } catch (e) {
+      return Left(e);
+    }
+  }
 }

@@ -1,7 +1,6 @@
 import 'package:devtest/core/core.dart';
 import 'package:flutter/material.dart';
 
-
 class LoadingOverlay {
   static void show({int? progress, int? insertedLines, int? totalLines}) {
     showDialog(

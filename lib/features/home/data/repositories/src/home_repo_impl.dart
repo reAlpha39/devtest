@@ -27,7 +27,7 @@ class HomeRepoImpl extends HomeRepo {
       return Left(e);
     }
   }
-  
+
   @override
   Future<Either<dynamic, bool>> createUser(UserModel user) async {
     try {

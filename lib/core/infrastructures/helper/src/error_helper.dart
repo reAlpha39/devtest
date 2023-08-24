@@ -5,7 +5,6 @@ import 'package:injectable/injectable.dart';
 @injectable
 class ErrorHelper {
   static handleError(error, {StackTrace? stack}) async {
-
     if (error is BadRequestException) {
       return ScaffoldMessenger.of(navigatorKey.currentContext!).showSnackBar(
         SnackBar(

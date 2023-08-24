@@ -127,12 +127,16 @@ class _HomePageBody extends StatelessWidget {
               loading: () => const Center(
                 child: CircularProgressIndicator.adaptive(),
               ),
-              loaded: (user) => ListView.builder(
-                itemCount: user.length,
-                itemBuilder: (context, index) => UserCard(
-                  user: user[index],
-                ),
-              ),
+              loaded: (user) => user.isEmpty
+                  ? const Center(
+                      child: Text('Tidak ada user ditemukan'),
+                    )
+                  : ListView.builder(
+                      itemCount: user.length,
+                      itemBuilder: (context, index) => UserCard(
+                        user: user[index],
+                      ),
+                    ),
             ),
           ),
         ),

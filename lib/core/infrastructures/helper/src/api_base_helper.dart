@@ -175,6 +175,7 @@ dynamic _returnResponse(
     case 401:
       throw UnauthorizedException(response.data["error"]);
     default:
-      throw SomethingDataException('${response.data["message"]}');
+      throw SomethingDataException(
+          'Status Code: ${response.statusCode}, Error: ${response.data}');
   }
 }
